@@ -407,7 +407,7 @@ Thanks to redux thunk, it is possible to define <i>action creators</i> so that t
 Now we can define the action creator, <i>initializeNotes</i>, that initializes the state of the notes as follows:
 
 ```js
-export const initializeNotes = () => {
+<!-- export const initializeNotes = () => {
   return async dispatch => {
     const notes = await noteService.getAll()
     dispatch({
@@ -415,7 +415,25 @@ export const initializeNotes = () => {
       data: notes,
     })
   }
-}
+} -->
+export const initializeNotes = () => {
+    return async (dispatch) => {
+        // const notes = await noteService.getAll();
+        // console.log("notes", notes);
+        // dispatch({
+        //     type: "INIT_NOTES",
+        //     data: notes,
+        // });
+        await noteService.getAll().then((response) => {
+            response.forEach((data) => {
+                dispatch({
+                    type: "INIT_NOTES",
+                    data: data,
+                });
+            });
+        });
+    };
+};
 ```
 
 In the inner function, meaning the <i>asynchronous action</i>, the operation first fetches all the notes from the server and then <i>dispatches</i> the notes to the action, which adds them to the store.
